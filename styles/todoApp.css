@@ -1,0 +1,71 @@
+body{
+    margin: 0;
+}
+
+.head{
+    display: flex;
+    padding: 0 0.5rem 0 1rem;
+    justify-content: space-between;
+    background-color: #42B783;
+    height: 5rem;
+    align-items: center;
+}
+
+.head .logo{
+    font-size: 1.2rem;
+    color: white;
+    font-weight: bold;
+}
+
+.head input{
+    border-radius: 2rem;
+    border: none;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.doingList,.doneList {
+    margin: 1rem;
+    width: 90%;
+    border-radius: 1rem;
+}
+
+.listHead{
+    display: flex;
+    justify-content: space-between;
+}
+
+.title,.listNum{
+   font-size: 1.2rem;
+   font-weight: bold;
+}
+
+.list{
+    display: flex;
+    flex-direction: column;
+}
+
+.todoItem{
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    height: 1.5rem;
+    background-color: #efefef;
+    align-items: center;
+    border-radius: 0.5rem;
+    box-shadow:0 0 3px rgba(0, 0, 0, 0.7);
+}
+
+.list button{
+    background-color: rgb(255, 123, 0);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;  
+    box-shadow:0 0 3px rgba(0, 0, 0, 0.5);
+}
+

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>doingYoudone</title>
+</head>
+<script src="./javascipt/vue.min.js"></script>
+<link rel="stylesheet" href="./styles/todoApp.css">
+<link rel="stylesheet" href="./styles//animate.css">
+
+<body>
+    <div id="app">
+        <div class="head">
+            <div class="logo">doingYoudone</div>
+            <input type="text" placeholder="请输入代办，限15字" id="input" @keydown.enter="createNewEvent" v-model="inputValue">
+        </div>
+
+        <div class="content">
+            <div class="doingList">
+                <div class="listHead">
+                    <div class="title">未完成</div>
+                    <div class="listNum">{{doingList.length}}</div>
+                </div>
+
+                <div class="list">
+                    <transition-group enter-active-class = "animate__animated animate__bounceInLeft" leave-active-class = "animate__animated animate__bounceOutRight">
+                        <div class="todoItem" v-for="item,index in doingList" :key = "'doing'+index">
+                            <input type="checkbox" @click.prevent = "doneOrNot(item.id)">
+                            <div class="todoContent">{{item.content}}</div>
+                            <button class="del" @click = "del">删除</button>
+                        </div>
+                    </transition-group>
+                </div>
+            </div>
+            <div>----------------------------</div>
+            <div class="doneList">
+                <div class="listHead">
+                    <div class="title">已完成</div>
+                    <div class="listNum">{{doneList.length}}</div>
+                </div>
+
+                <div class="list">
+                    <transition-group enter-active-class = "animate__animated animate__bounceInLeft" leave-active-class = "animate__animated animate__bounceOutRight">
+                        <div class="todoItem" v-for="item,index in doneList" :key = "'done'+index">
+                            <input type="checkbox" checked = "checked" @click.prevent = "doneOrNot(item.id)">
+                            <div class="todoContent">{{item.content}}</div>
+                            <button class="del" @click = "del">删除</button>
+                        </div>
+                    </transition-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    //实例化Vue
+    let app = new Vue({
+        //挂载
+        el: "#app",
+        data: {
+            //要做的事情数组
+            todoList: [],
+            //input中输入的值，input输入框用v-model绑定
+            inputValue: ""
+        },
+        //通过计算来过滤拿到未做和已做的事情
+        computed: {
+            //未做的事情
+            doingList: function () {
+                //调用filter方法过滤，返回isDoneW为false的事件给doingArr
+                let doingArr = this.todoList.filter((item, index) => {
+                    return !item.isDone
+                })
+                //最终把这个数组返给给doingList
+                return doingArr
+            },
+            //已做的事情
+            doneList: function () {
+                //调用filter方法过滤，返回isDoneW为true的事件给doingArr
+                let doneArr = this.todoList.filter((item, index) => {
+                    return item.isDone
+                })
+                //最终把这个数组返给给doneList
+                return doneArr
+            },
+        },
+        methods: {
+            //创建一个新的事情，此处用keydown.enter键盘事件绑定
+            createNewEvent: () => {
+                //限制输入的内容小于15个字
+                if (app.inputValue.length <= 15) {
+                    //如果小于等于15，我们封装一个对象传入
+                    app.todoList.push({
+                        content: app.inputValue,  //输入框的内容
+                        isDone: false,  //初始状态
+                        id:app.todoList.length  //用长度来作为每个事情的唯一标识符
+                    })
+
+                    app.localStorageSave() //调用缓存保存内容
+
+                    app.inputValue = "" //清空输入框里的内容
+                }else{
+                    alert("输入超长") //如果大于15，弹框提醒
+                }
+
+            },
+            //缓存保存
+            localStorageSave: () => {
+                //将todoList里的内容转为JSON格式保存在缓存中
+                localStorage.todoList = JSON.stringify(app.todoList)
+            },
+            //勾选转换状态，传入唯一标识符id
+            doneOrNot: (id) => {
+                //将todoList里对应的内容的状态取反
+                app.todoList[id].isDone = !app.todoList[id].isDone
+                //因为状态更新了，所以我们需要保存一下
+                app.localStorageSave()
+            },
+            //删除事情，传入唯一标识符
+            del: (id) =>{
+                //调用splice方法，删除对应位置的内容
+                app.todoList.splice(id,1)
+                //因为对应位置的事情被删除了，所以剩余事情的索引值发生了改变，但是我们的唯一标识符需要与索引值对应
+                //所以需要进行一遍重排
+                app.todoList.forEach((element,index) => {
+                    //id为当前的索引值
+                    element.id = index
+                });
+                //因为有内容变更，所以需要保存一下
+                app.localStorageSave();
+            }
+        },
+        //当页面挂载完，详情见生命周期函数
+        mounted:function() {
+            //当页面挂载完，我们把缓存中的todoList解析后给当前的todoList，这里判断了一下缓存中的todoList存不存在
+            this.todoList = localStorage.todoList?JSON.parse(localStorage.todoList):[]
+        }
+    })
+</script>
+
+</html>
