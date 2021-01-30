@@ -45,7 +45,7 @@
                     <transition-group enter-active-class = "animate__animated animate__bounceInLeft" leave-active-class = "animate__animated animate__bounceOutRight">
                         <div class="todoItem" v-for="item,index in doneList" :key = "'done'+index">
                             <input type="checkbox" checked = "checked" @click.prevent = "doneOrNot(item.id)">
-                            <div class="todoContent">{{item.content}}</div>
+                            <div class="todoContent doneContent">{{item.content}}</div>
                             <button class="del" @click = "del">删除</button>
                         </div>
                     </transition-group>

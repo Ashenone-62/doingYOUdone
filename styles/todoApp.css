@@ -69,3 +69,6 @@ body{
     box-shadow:0 0 3px rgba(0, 0, 0, 0.5);
 }
 
+.doneContent{
+    color: #8b8b8b;
+}
